@@ -1,33 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useCallback, useEffect } from 'react'
 import './App.css'
+import { get_pokemon_list_api } from './api/pokemon'
+import SearchInput from './components/ui/SearchInput'
+import { useRecoilState } from 'recoil'
+import { pokemon_list_atom } from './atom'
+import PokemonCard from './components/ui/PokemonCard'
+import { pokemon_list_type } from './types/pokemon'
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [pokemon_list, set_pokemon_list] = useRecoilState<never [] | pokemon_list_type [] >(pokemon_list_atom)
+  
+  const filter_pokemon_mode = (array:pokemon_list_type[], condition:string): pokemon_list_type[] => {
+    const return_value: pokemon_list_type[] = []
+    const _array = array.slice()
+    _array.map((value) => {
+      if (!value.name.includes(condition)) {
+        return_value.push(value)
+      }
+    })
+    return return_value
+  }
+  const get_pokemon_list = useCallback(async()=>{
+    const row_pokemon_list = await get_pokemon_list_api()
+    const pokemon_list = filter_pokemon_mode(row_pokemon_list.results, '-')
+    set_pokemon_list(pokemon_list)
+  },[get_pokemon_list_api])
+
+  useEffect(()=>{
+    get_pokemon_list()
+  },[get_pokemon_list])
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        pokemon book
       </p>
+    <SearchInput />
+      {pokemon_list.map((value, index)=>(
+        <PokemonCard key={index} data={value} />
+      ))}
     </>
   )
 }
