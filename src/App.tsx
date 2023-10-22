@@ -15,7 +15,6 @@ function App() {
       <p className="read-the-docs">
         pokemon book
       </p>
-
       <RouterProvider router={router} />
     </Suspense>
   )

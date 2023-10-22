@@ -14,6 +14,7 @@ const InputHeadless: FC<Props> = ({ children }) => {
   const handleValue = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
   }
+
   return children({
     value,
     onChange: handleValue
