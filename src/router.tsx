@@ -1,4 +1,4 @@
-import { RouteObject, createBrowserRouter } from "react-router-dom";
+import { RouteObject, createHashRouter } from "react-router-dom";
 import { lazy } from "react";
 
 import PokemonDetail from "./pages/PokemonDetail";
@@ -12,4 +12,4 @@ const rootRotuer: RouteObject[] = [{ path: '/', element: <Home /> }, { path: '/d
  * @TODO Lazy loading
  * @TODO 404 Page
  */
-export const router = createBrowserRouter(rootRotuer)
+export const router = createHashRouter(rootRotuer)
